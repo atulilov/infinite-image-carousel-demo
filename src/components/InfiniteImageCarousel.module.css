@@ -1,0 +1,136 @@
+.carouselContainer {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.scrollContainer {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: auto; /* Changed from smooth to auto for instant repositioning */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  cursor: grab;
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+  will-change: scroll-position; /* Optimize for frequent scroll changes */
+}
+
+.scrollContainer::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+.scrollContainer:active {
+  cursor: grabbing;
+}
+
+.imageWrapper {
+  position: relative;
+  flex-shrink: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  transition: transform 0.2s ease;
+}
+
+.imageWrapper:hover {
+  transform: scale(1.02);
+}
+
+.image {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: opacity 0.3s ease;
+}
+
+.image:hover {
+  opacity: 0.9;
+}
+
+.emptyCarousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #666;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px dashed #ccc;
+}
+
+.scrollIndicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  padding: 4px 8px;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.scrollBar {
+  width: 20px;
+  height: 2px;
+  background: white;
+  border-radius: 1px;
+  animation: pulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .imageWrapper {
+    min-width: 250px !important;
+  }
+
+  .imageWrapper:hover {
+    transform: none; /* Disable hover effects on mobile */
+  }
+
+  .image:hover {
+    opacity: 1;
+  }
+
+  .scrollContainer {
+    scroll-snap-type: x mandatory;
+  }
+
+  .imageWrapper {
+    scroll-snap-align: start;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .imageWrapper {
+    min-width: 200px !important;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .imageWrapper {
+    background-color: #2a2a2a;
+  }
+
+  .emptyCarousel {
+    background-color: #1a1a1a;
+    color: #ccc;
+    border-color: #444;
+  }
+}

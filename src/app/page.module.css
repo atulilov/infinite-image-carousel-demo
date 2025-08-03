@@ -32,6 +32,159 @@
   flex-direction: column;
   gap: 32px;
   grid-row-start: 2;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  background: linear-gradient(180deg, #000 0%, #666 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header p {
+  font-size: 1.1rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.carouselSection {
+  margin-bottom: 48px;
+}
+
+.carouselSection h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.carouselSection p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  color: #666;
+  font-size: 1rem;
+}
+
+.features {
+  background: #f8f9fa;
+  padding: 32px;
+  border-radius: 12px;
+  margin-top: 32px;
+}
+
+.features h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.features ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.features li {
+  padding: 8px 0;
+  font-size: 0.95rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .header h1 {
+    background: linear-gradient(180deg, #fff 0%, #aaa 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .header p {
+    color: #ccc;
+  }
+
+  .carouselSection h2 {
+    color: #fff;
+  }
+
+  .carouselSection p {
+    color: #ccc;
+  }
+
+  .loading {
+    background: #1a1a1a;
+    color: #ccc;
+  }
+
+  .features {
+    background: #1a1a1a;
+  }
+
+  .features h2 {
+    color: #fff;
+  }
+
+  .features li {
+    color: #ccc;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .page {
+    padding: 20px;
+    gap: 32px;
+  }
+
+  .main {
+    gap: 24px;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+
+  .header p {
+    font-size: 1rem;
+  }
+
+  .carouselSection {
+    margin-bottom: 32px;
+  }
+
+  .features {
+    padding: 24px;
+  }
+
+  .features ul {
+    grid-template-columns: 1fr;
+  }
 }
 
 .main ol {
