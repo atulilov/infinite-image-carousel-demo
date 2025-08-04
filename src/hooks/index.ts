@@ -1,1 +1,0 @@
-export { useImageData } from "./useImageData";
