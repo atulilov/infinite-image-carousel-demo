@@ -24,6 +24,7 @@ const eslintConfig = [
   // TypeScript and React configuration
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
+    ignores: ["public/sw.js"],
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {

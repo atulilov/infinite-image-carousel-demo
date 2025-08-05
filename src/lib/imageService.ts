@@ -22,7 +22,11 @@ export const fetchImages = async (
 
   try {
     const response = await fetch(
-      `https://picsum.photos/v2/list?page=1&limit=${count}`
+      `https://picsum.photos/v2/list?page=1&limit=${count}`,
+      {
+        // Add cache control for PWA
+        cache: "default",
+      }
     );
 
     if (!response.ok) {
@@ -42,8 +46,9 @@ export const fetchImages = async (
     return carouselImages;
   } catch {
     // Fallback: generate some placeholder images
+    // This will work offline if the URLs are cached by the service worker
     const fallbackImages: CarouselImage[] = Array.from(
-      { length: count },
+      { length: Math.min(count, 10) }, // Limit fallback to 10 images to avoid too many requests
       (_, index) => ({
         id: `fallback-${index}`,
         url: `https://picsum.photos/${width}/${height}?random=${index}`,

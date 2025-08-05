@@ -1,5 +1,7 @@
 import React from "react";
 import InfiniteImageCarousel from "../components/InfiniteImageCarousel";
+import PWAControls from "../components/PWAControls";
+import ServiceWorkerRegistration from "../components/ServiceWorkerRegistration";
 import { fetchImages } from "../lib/imageService";
 import styles from "./page.module.css";
 
@@ -12,6 +14,8 @@ export default async function Home() {
 
   return (
     <div className={styles.page}>
+      <ServiceWorkerRegistration />
+      <PWAControls />
       <main className={styles.main}>
         <div className={styles.header}>
           <h1>Infinite Image Carousel Demo</h1>

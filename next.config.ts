@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // PWA configuration
+  experimental: {
+    webpackBuildWorker: true,
+  },
   async headers() {
     return [
       {
@@ -34,6 +38,19 @@ const nextConfig: NextConfig = {
           {
             key: "Content-Security-Policy",
             value: "default-src 'self'; script-src 'self'",
+          },
+        ],
+      },
+      {
+        source: "/manifest.json",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/manifest+json",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
