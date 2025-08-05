@@ -2,7 +2,10 @@
   position: relative;
   width: 100%;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: clamp(6px, 1.5vw, 8px);
+  /* Improved container for better mobile experience */
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
 }
 
 .scrollContainer {
@@ -15,6 +18,11 @@
   touch-action: pan-x;
   -webkit-overflow-scrolling: touch;
   will-change: scroll-position; /* Optimize for frequent scroll changes */
+  /* Improved scrolling performance */
+  transform: translateZ(0);
+  scroll-snap-type: x mandatory;
+  /* Better momentum scrolling on iOS */
+  -webkit-scroll-behavior: smooth;
 }
 
 .scrollContainer::-webkit-scrollbar {
@@ -25,17 +33,46 @@
   cursor: grabbing;
 }
 
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .scrollContainer {
+    cursor: default;
+    scroll-snap-type: x mandatory;
+  }
+}
+
 .imageWrapper {
   position: relative;
   flex-shrink: 0;
-  border-radius: 6px;
+  border-radius: clamp(4px, 1vw, 6px);
   overflow: hidden;
   background-color: #f0f0f0;
   transition: transform 0.2s ease;
+  scroll-snap-align: start;
+  /* Better aspect ratio handling */
+  aspect-ratio: 3/2;
+  background-image:
+    linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
+    linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
+    linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+  background-size: 20px 20px;
+  background-position:
+    0 0,
+    0 10px,
+    10px -10px,
+    -10px 0px;
 }
 
-.imageWrapper:hover {
-  transform: scale(1.02);
+/* Only enable hover effects on devices that support it */
+@media (hover: hover) and (pointer: fine) {
+  .imageWrapper:hover {
+    transform: scale(1.02);
+  }
+
+  .image:hover {
+    opacity: 0.9;
+  }
 }
 
 .image {
@@ -45,38 +82,39 @@
   user-select: none;
   -webkit-user-drag: none;
   transition: opacity 0.3s ease;
-}
-
-.image:hover {
-  opacity: 0.9;
+  /* Better image loading */
+  background-color: transparent;
 }
 
 .emptyCarousel {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 200px;
+  height: clamp(150px, 25vw, 200px);
   color: #666;
-  font-size: 16px;
+  font-size: clamp(var(--text-sm), 2.5vw, var(--text-base));
   background-color: #f9f9f9;
-  border-radius: 8px;
+  border-radius: clamp(6px, 1.5vw, 8px);
   border: 1px dashed #ccc;
+  text-align: center;
+  padding: clamp(1rem, 4vw, 2rem);
 }
 
 .scrollIndicator {
   position: absolute;
-  bottom: 8px;
+  bottom: clamp(6px, 2vw, 8px);
   left: 50%;
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.5);
   border-radius: 12px;
-  padding: 4px 8px;
+  padding: clamp(3px, 1vw, 4px) clamp(6px, 2vw, 8px);
   opacity: 0.8;
   pointer-events: none;
+  z-index: 10;
 }
 
 .scrollBar {
-  width: 20px;
+  width: clamp(16px, 4vw, 20px);
   height: 2px;
   background: white;
   border-radius: 1px;
@@ -92,33 +130,86 @@
   }
 }
 
-/* Mobile optimizations */
-@media (max-width: 768px) {
-  .imageWrapper {
-    min-width: 250px !important;
-  }
-
-  .imageWrapper:hover {
-    transform: none; /* Disable hover effects on mobile */
-  }
-
-  .image:hover {
-    opacity: 1;
-  }
-
+/* Responsive breakpoints */
+/* Mobile: up to 767px */
+@media (max-width: 767px) {
   .scrollContainer {
     scroll-snap-type: x mandatory;
+    /* Better scroll momentum on mobile */
+    -webkit-overflow-scrolling: touch;
+    /* Reduce scroll sensitivity on mobile */
+    scroll-padding: 0 1rem;
   }
 
   .imageWrapper {
     scroll-snap-align: start;
+    /* Ensure better touch interaction */
+    touch-action: manipulation;
+  }
+
+  .scrollIndicator {
+    /* Make indicator more visible on mobile */
+    background: rgba(0, 0, 0, 0.7);
+    padding: clamp(4px, 1.5vw, 6px) clamp(8px, 3vw, 12px);
+  }
+}
+
+/* Tablet: 768px – 1024px */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .scrollContainer {
+    /* Optimize for tablet scrolling */
+    scroll-padding: 0 2rem;
+  }
+
+  .imageWrapper {
+    /* Slightly less aggressive snap on tablet */
+    scroll-snap-align: start;
+  }
+}
+
+/* Desktop: 1025px and above */
+@media (min-width: 1025px) {
+  .scrollContainer {
+    /* Disable snap on desktop for smoother experience */
+    scroll-snap-type: none;
+    scroll-padding: 0;
+  }
+
+  .imageWrapper {
+    scroll-snap-align: none;
+  }
+
+  /* Show scroll indicator less prominently on desktop */
+  .scrollIndicator {
+    opacity: 0.6;
   }
 }
 
 /* Small mobile devices */
 @media (max-width: 480px) {
+  .carouselContainer {
+    /* Reduce border radius on very small screens */
+    border-radius: 4px;
+  }
+
   .imageWrapper {
-    min-width: 200px !important;
+    border-radius: 3px;
+  }
+
+  .emptyCarousel {
+    padding: clamp(0.75rem, 3vw, 1rem);
+    border-radius: 4px;
+  }
+}
+
+/* Large desktop screens */
+@media (min-width: 1280px) {
+  .carouselContainer {
+    border-radius: 10px;
+  }
+
+  .imageWrapper {
+    border-radius: 8px;
   }
 }
 
@@ -126,11 +217,61 @@
 @media (prefers-color-scheme: dark) {
   .imageWrapper {
     background-color: #2a2a2a;
+    background-image:
+      linear-gradient(45deg, #2a2a2a 25%, transparent 25%),
+      linear-gradient(-45deg, #2a2a2a 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #2a2a2a 75%),
+      linear-gradient(-45deg, transparent 75%, #2a2a2a 75%);
   }
 
   .emptyCarousel {
     background-color: #1a1a1a;
     color: #ccc;
     border-color: #444;
+  }
+
+  .scrollIndicator {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+  }
+
+  .scrollBar {
+    background: #fff;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .imageWrapper {
+    border: 2px solid currentColor;
+  }
+
+  .emptyCarousel {
+    border: 2px solid currentColor;
+    border-style: solid;
+  }
+
+  .scrollIndicator {
+    background: currentColor;
+    color: var(--background);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .imageWrapper {
+    transition: none;
+  }
+
+  .image {
+    transition: none;
+  }
+
+  .scrollBar {
+    animation: none;
+  }
+
+  .scrollContainer {
+    scroll-behavior: auto;
   }
 }

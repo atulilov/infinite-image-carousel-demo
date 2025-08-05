@@ -29,8 +29,44 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
 }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [responsiveItemWidth, setResponsiveItemWidth] = useState(itemWidth);
+  const [responsiveItemHeight, setResponsiveItemHeight] = useState(itemHeight);
+  const [responsiveGap, setResponsiveGap] = useState(gap);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isResettingRef = useRef(false);
+
+  // Responsive sizing based on viewport
+  const updateResponsiveSizes = useCallback(() => {
+    const viewport = window.innerWidth;
+
+    if (viewport <= 767) {
+      // Mobile
+      setResponsiveItemWidth(Math.min(itemWidth * 0.7, viewport * 0.75));
+      setResponsiveItemHeight(itemHeight * 0.7);
+      setResponsiveGap(Math.max(gap * 0.5, 8));
+    } else if (viewport <= 1024) {
+      // Tablet
+      setResponsiveItemWidth(Math.min(itemWidth * 0.85, viewport * 0.5));
+      setResponsiveItemHeight(itemHeight * 0.85);
+      setResponsiveGap(Math.max(gap * 0.75, 12));
+    } else {
+      // Desktop
+      setResponsiveItemWidth(itemWidth);
+      setResponsiveItemHeight(itemHeight);
+      setResponsiveGap(gap);
+    }
+  }, [itemWidth, itemHeight, gap]);
+
+  useEffect(() => {
+    updateResponsiveSizes();
+
+    const handleResize = () => {
+      updateResponsiveSizes();
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [updateResponsiveSizes]);
 
   // Create extended array for seamless infinite scroll
   // We need at least 3 copies: prev, current, next
@@ -41,7 +77,7 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
 
     const container = scrollContainerRef.current;
     const scrollLeft = container.scrollLeft;
-    const itemWidthWithGap = itemWidth + gap;
+    const itemWidthWithGap = responsiveItemWidth + responsiveGap;
     const totalItemsPerSet = images.length;
     const singleSetWidth = totalItemsPerSet * itemWidthWithGap;
 
@@ -77,19 +113,19 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
     scrollTimeoutRef.current = setTimeout(() => {
       setIsScrolling(false);
     }, 150);
-  }, [images.length, itemWidth, gap]);
+  }, [images.length, responsiveItemWidth, responsiveGap]);
 
   const initializeScrollPosition = useCallback(() => {
     if (!scrollContainerRef.current) return;
 
     const container = scrollContainerRef.current;
-    const itemWidthWithGap = itemWidth + gap;
+    const itemWidthWithGap = responsiveItemWidth + responsiveGap;
     const totalItemsPerSet = images.length;
 
     // Start in the middle set (second copy)
     const initialScrollLeft = totalItemsPerSet * itemWidthWithGap;
     container.scrollLeft = initialScrollLeft;
-  }, [images.length, itemWidth, gap]);
+  }, [images.length, responsiveItemWidth, responsiveGap]);
 
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -118,22 +154,22 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
       <div
         ref={scrollContainerRef}
         className={styles.scrollContainer}
-        style={{ gap: `${gap}px` }}
+        style={{ gap: `${responsiveGap}px` }}
       >
         {extendedImages.map((image, index) => (
           <div
             key={`${image.id}-${index}`}
             className={styles.imageWrapper}
             style={{
-              minWidth: `${itemWidth}px`,
-              height: `${itemHeight}px`,
+              minWidth: `${responsiveItemWidth}px`,
+              height: `${responsiveItemHeight}px`,
             }}
           >
             <Image
               src={image.url}
               alt={image.alt}
               fill
-              sizes={`${itemWidth}px`}
+              sizes={`(max-width: 767px) ${Math.round(responsiveItemWidth)}px, (max-width: 1024px) ${Math.round(responsiveItemWidth)}px, ${responsiveItemWidth}px`}
               className={styles.image}
               priority={index < 6} // Prioritize first few images
               onError={e => {

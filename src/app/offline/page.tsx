@@ -1,12 +1,14 @@
 "use client";
 
+import styles from "./page.module.css";
+
 export default function OfflinePage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-8">
-      <div className="text-center max-w-md">
-        <div className="mb-8">
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <div className={styles.iconContainer}>
           <svg
-            className="w-24 h-24 mx-auto mb-4 text-gray-400"
+            className={styles.icon}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -21,30 +23,30 @@ export default function OfflinePage() {
           </svg>
         </div>
 
-        <h1 className="text-3xl font-bold mb-4">You&apos;re Offline</h1>
+        <h1 className={styles.title}>You&apos;re Offline</h1>
 
-        <p className="text-gray-400 mb-8">
+        <p className={styles.description}>
           It looks like you&apos;re not connected to the internet. Don&apos;t
           worry, you can still view cached images from your previous visits.
         </p>
 
-        <div className="space-y-4">
+        <div className={styles.buttonContainer}>
           <button
             onClick={() => window.location.reload()}
-            className="w-full bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+            className={styles.primaryButton}
           >
             Try Again
           </button>
 
           <button
             onClick={() => window.history.back()}
-            className="w-full border border-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+            className={styles.secondaryButton}
           >
             Go Back
           </button>
         </div>
 
-        <div className="mt-8 text-sm text-gray-500">
+        <div className={styles.footer}>
           <p>
             Once you&apos;re back online, the app will automatically sync and
             load new content.

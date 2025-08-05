@@ -1,61 +1,77 @@
 .container {
   position: fixed;
-  top: 1rem;
-  right: 1rem;
+  top: clamp(0.5rem, 2vw, 1rem);
+  right: clamp(0.5rem, 2vw, 1rem);
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: clamp(0.375rem, 1.5vw, 0.5rem);
   z-index: 1000;
+  /* Ensure it doesn't interfere with content */
+  pointer-events: none;
+}
+
+.container > * {
+  pointer-events: auto;
 }
 
 .statusIndicator {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  gap: clamp(0.375rem, 1.5vw, 0.5rem);
+  padding: clamp(0.375rem, 1.5vw, 0.5rem) clamp(0.75rem, 3vw, 1rem);
   border-radius: 1.5rem;
-  font-size: 0.875rem;
+  font-size: clamp(var(--text-xs), 2vw, var(--text-sm));
   font-weight: 500;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  /* Better mobile touch target */
+  min-height: 2.5rem;
+  transition: all 0.2s ease;
 }
 
 .statusIndicator.online {
   background-color: rgba(34, 197, 94, 0.1);
   color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.2);
 }
 
 .statusIndicator.offline {
   background-color: rgba(239, 68, 68, 0.1);
   color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.2);
 }
 
 .statusDot {
-  width: 0.5rem;
-  height: 0.5rem;
+  width: clamp(0.375rem, 1.5vw, 0.5rem);
+  height: clamp(0.375rem, 1.5vw, 0.5rem);
   border-radius: 50%;
   background-color: currentColor;
+  flex-shrink: 0;
 }
 
 .statusText {
   white-space: nowrap;
+  font-weight: 500;
 }
 
 .installButton {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  gap: clamp(0.375rem, 1.5vw, 0.5rem);
+  padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.75rem, 3vw, 1rem);
   background-color: rgba(255, 255, 255, 0.9);
   color: #000000;
   border: none;
   border-radius: 1.5rem;
-  font-size: 0.875rem;
+  font-size: clamp(var(--text-xs), 2vw, var(--text-sm));
   font-weight: 600;
   cursor: pointer;
   backdrop-filter: blur(10px);
   transition: all 0.2s ease;
   white-space: nowrap;
+  /* Better mobile touch target */
+  min-height: 2.75rem;
+  min-width: fit-content;
 }
 
 .installButton:hover {
@@ -67,18 +83,21 @@
 .shareButton {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  gap: clamp(0.375rem, 1.5vw, 0.5rem);
+  padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.75rem, 3vw, 1rem);
   background-color: rgba(0, 0, 0, 0.7);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 1.5rem;
-  font-size: 0.875rem;
+  font-size: clamp(var(--text-xs), 2vw, var(--text-sm));
   font-weight: 600;
   cursor: pointer;
   backdrop-filter: blur(10px);
   transition: all 0.2s ease;
   white-space: nowrap;
+  /* Better mobile touch target */
+  min-height: 2.75rem;
+  min-width: fit-content;
 }
 
 .shareButton:hover {
@@ -91,53 +110,243 @@
 .installedIndicator {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  gap: clamp(0.375rem, 1.5vw, 0.5rem);
+  padding: clamp(0.375rem, 1.5vw, 0.5rem) clamp(0.75rem, 3vw, 1rem);
   background-color: rgba(34, 197, 94, 0.1);
   color: #22c55e;
   border: 1px solid rgba(34, 197, 94, 0.2);
   border-radius: 1.5rem;
-  font-size: 0.875rem;
+  font-size: clamp(var(--text-xs), 2vw, var(--text-sm));
   font-weight: 500;
   backdrop-filter: blur(10px);
+  /* Better mobile touch target */
+  min-height: 2.5rem;
 }
 
 .icon {
-  width: 1rem;
-  height: 1rem;
+  width: clamp(0.875rem, 2.5vw, 1rem);
+  height: clamp(0.875rem, 2.5vw, 1rem);
   flex-shrink: 0;
 }
 
-/* Mobile responsive adjustments */
-@media (max-width: 768px) {
+/* Responsive breakpoints */
+/* Mobile: up to 767px */
+@media (max-width: 767px) {
   .container {
+    top: clamp(0.5rem, 2vw, 0.75rem);
+    right: clamp(0.5rem, 2vw, 0.75rem);
+    gap: clamp(0.25rem, 1vw, 0.375rem);
+  }
+
+  .statusIndicator,
+  .installButton,
+  .shareButton,
+  .installedIndicator {
+    font-size: clamp(0.7rem, 2vw, 0.8rem);
+    padding: clamp(0.375rem, 1.5vw, 0.5rem) clamp(0.625rem, 2.5vw, 0.75rem);
+    min-height: 2.25rem;
+  }
+
+  .icon {
+    width: clamp(0.75rem, 2vw, 0.875rem);
+    height: clamp(0.75rem, 2vw, 0.875rem);
+  }
+
+  .statusDot {
+    width: clamp(0.25rem, 1vw, 0.375rem);
+    height: clamp(0.25rem, 1vw, 0.375rem);
+  }
+
+  /* Stack buttons horizontally on very small screens if needed */
+  .container {
+    max-width: calc(100vw - 1rem);
+  }
+
+  .installButton,
+  .shareButton {
+    /* Ensure buttons don't get too wide on mobile */
+    max-width: 150px;
+  }
+}
+
+/* Tablet: 768px – 1024px */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .container {
+    top: clamp(0.75rem, 1.5vw, 1rem);
+    right: clamp(0.75rem, 1.5vw, 1rem);
+    gap: clamp(0.375rem, 1vw, 0.5rem);
+  }
+
+  .statusIndicator,
+  .installButton,
+  .shareButton,
+  .installedIndicator {
+    font-size: clamp(0.8rem, 1.5vw, 0.875rem);
+    min-height: 2.5rem;
+  }
+
+  .icon {
+    width: clamp(0.875rem, 1.5vw, 1rem);
+    height: clamp(0.875rem, 1.5vw, 1rem);
+  }
+}
+
+/* Desktop: 1025px and above */
+@media (min-width: 1025px) {
+  .container {
+    top: 1rem;
+    right: 1rem;
+    gap: 0.5rem;
+  }
+
+  /* Enable better hover effects on desktop */
+  .installButton:hover,
+  .shareButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .container {
+    /* Move slightly inward on very small screens */
     top: 0.5rem;
     right: 0.5rem;
   }
 
+  .statusText {
+    /* Hide status text on very small screens, keep only dot */
+    display: none;
+  }
+
+  .statusIndicator {
+    /* Make indicator more compact */
+    padding: 0.5rem;
+    min-width: 2rem;
+    justify-content: center;
+  }
+
+  .installButton,
+  .shareButton {
+    /* Show only icons on very small screens */
+    padding: 0.5rem;
+    min-width: 2.5rem;
+    justify-content: center;
+  }
+
+  .installButton span,
+  .shareButton span {
+    display: none;
+  }
+}
+
+/* Large desktop screens */
+@media (min-width: 1280px) {
+  .container {
+    gap: 0.75rem;
+  }
+
+  .statusIndicator,
   .installButton,
   .shareButton,
-  .statusIndicator,
   .installedIndicator {
-    font-size: 0.8rem;
-    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    padding: 0.75rem 1.25rem;
+    min-height: 3rem;
   }
 
   .icon {
-    width: 0.875rem;
-    height: 0.875rem;
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .installButton,
+  .shareButton {
+    /* Better touch targets */
+    min-height: 2.75rem;
+    padding: 0.625rem 1rem;
+  }
+
+  /* Disable hover effects on touch devices */
+  .installButton:hover,
+  .shareButton:hover {
+    transform: none;
+    box-shadow: none;
   }
 }
 
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
   .installButton,
-  .shareButton {
+  .shareButton,
+  .statusIndicator,
+  .installedIndicator {
     transition: none;
   }
 
   .installButton:hover,
   .shareButton:hover {
     transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .statusIndicator,
+  .installButton,
+  .shareButton,
+  .installedIndicator {
+    border-width: 2px;
+    border-style: solid;
+  }
+
+  .statusIndicator.online {
+    border-color: #22c55e;
+  }
+
+  .statusIndicator.offline {
+    border-color: #ef4444;
+  }
+
+  .installButton {
+    border-color: #000000;
+  }
+
+  .shareButton {
+    border-color: #ffffff;
+  }
+
+  .installedIndicator {
+    border-color: #22c55e;
+  }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  .statusIndicator {
+    backdrop-filter: blur(12px);
+  }
+
+  .installButton {
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #000000;
+  }
+
+  .installButton:hover {
+    background-color: rgba(255, 255, 255, 1);
+  }
+
+  .shareButton {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .shareButton:hover {
+    background-color: rgba(0, 0, 0, 0.95);
+    border-color: rgba(255, 255, 255, 0.4);
   }
 }
