@@ -331,8 +331,22 @@ a.secondary {
 
 /* Mobile-specific adjustments */
 @media (max-width: 767px) {
+  .page {
+    /* Ensure proper touch scrolling */
+    touch-action: pan-y;
+    overflow-x: hidden;
+  }
+
   .main {
     align-items: center;
+    /* Ensure carousel container doesn't overflow */
+    overflow-x: hidden;
+  }
+
+  .carouselSection {
+    /* Allow carousel to use full width */
+    width: 100%;
+    overflow-x: hidden;
   }
 
   .main ol {

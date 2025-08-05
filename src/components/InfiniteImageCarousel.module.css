@@ -23,6 +23,9 @@
   scroll-snap-type: x mandatory;
   /* Better momentum scrolling on iOS */
   -webkit-scroll-behavior: smooth;
+  /* Improve touch responsiveness */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .scrollContainer::-webkit-scrollbar {
@@ -38,6 +41,17 @@
   .scrollContainer {
     cursor: default;
     scroll-snap-type: x mandatory;
+    /* Enhanced touch scrolling */
+    -webkit-overflow-scrolling: touch;
+    /* Better touch response */
+    touch-action: pan-x;
+  }
+
+  .imageWrapper {
+    /* Improve touch targets */
+    touch-action: manipulation;
+    /* Prevent iOS touch highlights */
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
@@ -133,18 +147,44 @@
 /* Responsive breakpoints */
 /* Mobile: up to 767px */
 @media (max-width: 767px) {
+  .carouselContainer {
+    /* Improve touch area */
+    touch-action: pan-x;
+    /* Better momentum scrolling */
+    -webkit-overflow-scrolling: touch;
+  }
+
   .scrollContainer {
     scroll-snap-type: x mandatory;
-    /* Better scroll momentum on mobile */
+    /* Enhanced mobile scrolling */
     -webkit-overflow-scrolling: touch;
+    /* Better touch handling */
+    touch-action: pan-x;
     /* Reduce scroll sensitivity on mobile */
     scroll-padding: 0 1rem;
+    /* Improve scrolling performance */
+    transform: translate3d(0, 0, 0);
+    /* Ensure smooth momentum scrolling */
+    -webkit-scroll-behavior: smooth;
+    scroll-behavior: smooth;
+    /* Prevent text selection during scroll */
+    user-select: none;
+    -webkit-user-select: none;
+    /* Better momentum physics */
+    scroll-snap-stop: normal;
   }
 
   .imageWrapper {
     scroll-snap-align: start;
-    /* Ensure better touch interaction */
+    /* Better touch interaction */
     touch-action: manipulation;
+    /* Larger minimum touch target */
+    min-width: 240px;
+    min-height: 160px;
+    /* Prevent iOS double-tap zoom */
+    -webkit-tap-highlight-color: transparent;
+    /* Better scroll snap behavior */
+    scroll-snap-stop: normal;
   }
 
   .scrollIndicator {
@@ -190,10 +230,22 @@
   .carouselContainer {
     /* Reduce border radius on very small screens */
     border-radius: 4px;
+    /* Ensure full touch responsiveness */
+    touch-action: pan-x;
+  }
+
+  .scrollContainer {
+    /* Optimize for small screens */
+    scroll-padding: 0 0.5rem;
+    /* Ensure smooth scrolling */
+    -webkit-overflow-scrolling: touch;
   }
 
   .imageWrapper {
     border-radius: 3px;
+    /* Ensure minimum touch target size */
+    min-width: 200px;
+    min-height: 140px;
   }
 
   .emptyCarousel {

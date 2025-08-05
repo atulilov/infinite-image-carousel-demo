@@ -35,15 +35,21 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isResettingRef = useRef(false);
 
+  // Touch handling for mobile swipe
+  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(
+    null
+  );
+  const isTouchDevice = useRef(false);
+
   // Responsive sizing based on viewport
   const updateResponsiveSizes = useCallback(() => {
     const viewport = window.innerWidth;
 
     if (viewport <= 767) {
-      // Mobile
-      setResponsiveItemWidth(Math.min(itemWidth * 0.7, viewport * 0.75));
-      setResponsiveItemHeight(itemHeight * 0.7);
-      setResponsiveGap(Math.max(gap * 0.5, 8));
+      // Mobile - Make items larger and more touchable
+      setResponsiveItemWidth(Math.min(itemWidth * 0.85, viewport * 0.8));
+      setResponsiveItemHeight(itemHeight * 0.8);
+      setResponsiveGap(Math.max(gap * 0.75, 12));
     } else if (viewport <= 1024) {
       // Tablet
       setResponsiveItemWidth(Math.min(itemWidth * 0.85, viewport * 0.5));
@@ -115,6 +121,58 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
     }, 150);
   }, [images.length, responsiveItemWidth, responsiveGap]);
 
+  // Touch handlers for better mobile experience
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (!scrollContainerRef.current || !e.touches[0]) return;
+
+    isTouchDevice.current = true;
+    const touch = e.touches[0];
+    touchStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now(),
+    };
+
+    // Reduce scroll momentum to improve touch responsiveness
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.style.scrollSnapType = "x mandatory";
+    }
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!touchStartRef.current || !scrollContainerRef.current || !e.touches[0])
+      return;
+
+    const touch = e.touches[0];
+    const deltaX = Math.abs(touch.clientX - touchStartRef.current.x);
+    const deltaY = Math.abs(touch.clientY - touchStartRef.current.y);
+
+    // If horizontal swipe is dominant, prevent vertical scrolling
+    if (deltaX > deltaY && deltaX > 10) {
+      e.preventDefault();
+    }
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    touchStartRef.current = null;
+
+    // Restore normal scroll behavior
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.style.scrollSnapType = "x mandatory";
+    }
+  }, []);
+
+  // Handle wheel events for better hybrid device support
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    // If this is a touch device, let the native scroll handle it
+    if (isTouchDevice.current) return;
+
+    // Prevent parent scroll when scrolling horizontally in the carousel
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+      e.preventDefault();
+    }
+  }, []);
+
   const initializeScrollPosition = useCallback(() => {
     if (!scrollContainerRef.current) return;
 
@@ -134,6 +192,7 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
     // Initialize scroll position after images load
     const timer = setTimeout(initializeScrollPosition, 100);
 
+    // Use passive listeners for better performance on mobile
     container.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
@@ -155,6 +214,10 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
         ref={scrollContainerRef}
         className={styles.scrollContainer}
         style={{ gap: `${responsiveGap}px` }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onWheel={handleWheel}
       >
         {extendedImages.map((image, index) => (
           <div

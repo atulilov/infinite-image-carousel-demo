@@ -90,6 +90,8 @@ html {
   scroll-behavior: smooth;
   /* Prevent horizontal overflow */
   overflow-x: hidden;
+  /* Better touch handling on mobile */
+  touch-action: manipulation;
 }
 
 body {
@@ -208,5 +210,31 @@ button {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile touch optimizations */
+@media (max-width: 767px) {
+  html {
+    /* Prevent zoom on double tap */
+    touch-action: manipulation;
+  }
+
+  body {
+    /* Better momentum scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
+    /* Prevent horizontal scroll */
+    overflow-x: hidden;
+  }
+
+  /* Improve touch targets */
+  button,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    /* Minimum touch target size */
+    min-height: 44px;
+    min-width: 44px;
   }
 }
