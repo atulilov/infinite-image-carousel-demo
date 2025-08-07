@@ -3,7 +3,7 @@
 import { usePWA } from "~/hooks/usePWA";
 import styles from "./PWAControls.module.css";
 
-export default function PWAControls() {
+const PWAControls = () => {
   const { isInstallable, isInstalled, isOnline, installApp, shareApp } =
     usePWA();
 
@@ -89,4 +89,6 @@ export default function PWAControls() {
       )}
     </div>
   );
-}
+};
+
+export default PWAControls;

@@ -38,7 +38,7 @@ const handleServiceWorkerUpdate = (registration: ServiceWorkerRegistration) => {
   });
 };
 
-export default function ServiceWorkerRegistration() {
+const ServiceWorkerRegistration = () => {
   useEffect(() => {
     if (!navigator.serviceWorker || process.env.NODE_ENV !== "production") {
       return;
@@ -61,4 +61,6 @@ export default function ServiceWorkerRegistration() {
   }, []);
 
   return null;
-}
+};
+
+export default ServiceWorkerRegistration;
