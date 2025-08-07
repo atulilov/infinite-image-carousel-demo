@@ -149,7 +149,7 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
 
     // If horizontal swipe is dominant, prevent vertical scrolling
     if (deltaX > deltaY && deltaX > 10) {
-      e.preventDefault();
+      // e.preventDefault();
     }
   }, []);
 

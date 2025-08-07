@@ -3,9 +3,13 @@
   width: 100%;
   overflow: hidden;
   border-radius: clamp(6px, 1.5vw, 8px);
-  /* Improved container for better mobile experience */
+  /* Better touch handling specifically for carousel */
   touch-action: pan-x;
   -webkit-overflow-scrolling: touch;
+  /* Improve text rendering within carousel */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .scrollContainer {
@@ -106,7 +110,7 @@
   justify-content: center;
   height: clamp(150px, 25vw, 200px);
   color: #666;
-  font-size: clamp(var(--text-sm), 2.5vw, var(--text-base));
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
   background-color: #f9f9f9;
   border-radius: clamp(6px, 1.5vw, 8px);
   border: 1px dashed #ccc;
@@ -305,25 +309,30 @@
 
   .scrollIndicator {
     background: currentColor;
-    color: var(--background);
+    color: #ffffff;
   }
 }
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .imageWrapper {
-    transition: none;
-  }
-
-  .image {
-    transition: none;
-  }
-
-  .scrollBar {
-    animation: none;
+  .carouselContainer *,
+  .carouselContainer *::before,
+  .carouselContainer *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 
   .scrollContainer {
-    scroll-behavior: auto;
+    scroll-behavior: auto !important;
+  }
+
+  .imageWrapper {
+    transition: none !important;
+  }
+
+  .image {
+    transition: none !important;
   }
 }
