@@ -30,15 +30,18 @@ export function usePWA(): UsePWAReturn {
   useEffect(() => {
     // Check if already installed
     const checkInstalled = () => {
-      if (typeof window !== "undefined") {
-        const isStandalone = window.matchMedia(
-          "(display-mode: standalone)"
-        ).matches;
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-        const isIOSStandalone =
-          (window.navigator as NavigatorWithStandalone).standalone === true;
-        setIsInstalled(isStandalone || (isIOS && isIOSStandalone));
+      if (typeof window === "undefined") {
+        return;
       }
+
+      const isStandalone = window.matchMedia(
+        "(display-mode: standalone)"
+      ).matches;
+
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const isIOSStandalone =
+        (window.navigator as NavigatorWithStandalone).standalone === true;
+      setIsInstalled(isStandalone || (isIOS && isIOSStandalone));
     };
 
     // Check online status
@@ -96,14 +99,14 @@ export function usePWA(): UsePWAReturn {
     if (navigator.share) {
       await navigator.share({
         title: "Infinite Image Carousel",
-        text: "Check out this beautiful infinite scrolling image carousel!",
+        text: "Check out this infinite scrolling image carousel!",
         url: window.location.href,
       });
-    } else {
-      // Fallback to copying to clipboard
-      await navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard!");
+      return;
     }
+    // Fallback to copying to clipboard
+    await navigator.clipboard.writeText(window.location.href);
+    alert("Link copied to clipboard!");
   };
 
   return {

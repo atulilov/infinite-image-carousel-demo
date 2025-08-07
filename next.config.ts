@@ -10,10 +10,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // PWA configuration
-  experimental: {
-    webpackBuildWorker: true,
-  },
   async headers() {
     return [
       {

@@ -7,24 +7,6 @@ export default function PWAControls() {
   const { isInstallable, isInstalled, isOnline, installApp, shareApp } =
     usePWA();
 
-  const handleInstall = async () => {
-    try {
-      await installApp();
-    } catch {
-      // Handle error silently or show user-friendly message
-      alert("Unable to install app. Please try again later.");
-    }
-  };
-
-  const handleShare = async () => {
-    try {
-      await shareApp();
-    } catch {
-      // Handle error silently or show user-friendly message
-      alert("Unable to share app. Please try again later.");
-    }
-  };
-
   return (
     <div className={styles.container}>
       {/* Online/Offline Status */}
@@ -40,7 +22,7 @@ export default function PWAControls() {
       {/* Install Button */}
       {isInstallable && !isInstalled && (
         <button
-          onClick={handleInstall}
+          onClick={installApp}
           className={styles.installButton}
           title="Install app"
         >
@@ -64,7 +46,7 @@ export default function PWAControls() {
 
       {/* Share Button */}
       <button
-        onClick={handleShare}
+        onClick={shareApp}
         className={styles.shareButton}
         title="Share app"
       >

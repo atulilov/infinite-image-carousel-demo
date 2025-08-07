@@ -169,7 +169,7 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
 
     // Prevent parent scroll when scrolling horizontally in the carousel
     if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-      e.preventDefault();
+      // e.preventDefault();
     }
   }, []);
 

@@ -2,47 +2,63 @@
 
 import { useEffect } from "react";
 
+const registerOrGetServiceWorker = async () => {
+  // Check if we already have a registration
+  const existingRegistration = await navigator.serviceWorker
+    .getRegistration("/")
+    .catch(error => {
+      console.warn("Failed to get service worker registration:", error);
+      return null;
+    });
+
+  if (existingRegistration) {
+    console.log("Using existing service worker");
+    return existingRegistration;
+  }
+
+  // Register new service worker (this automatically checks for updates)
+  const registration = await navigator.serviceWorker.register("/sw.js", {
+    scope: "/",
+  });
+
+  console.log("Registered new service worker");
+  return registration;
+};
+
+const handleServiceWorkerUpdate = (registration: ServiceWorkerRegistration) => {
+  const newWorker = registration.installing;
+  if (!newWorker) return;
+
+  newWorker.addEventListener("statechange", () => {
+    if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+      if (confirm("New version available! Refresh to update?")) {
+        window.location.reload();
+      }
+    }
+  });
+};
+
 export default function ServiceWorkerRegistration() {
   useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      const registerSW = async () => {
-        try {
-          const registration = await navigator.serviceWorker.register(
-            "/sw.js",
-            {
-              scope: "/",
-            }
-          );
-
-          registration.addEventListener("updatefound", () => {
-            const newWorker = registration.installing;
-            if (newWorker) {
-              newWorker.addEventListener("statechange", () => {
-                if (
-                  newWorker.state === "installed" &&
-                  navigator.serviceWorker.controller
-                ) {
-                  // New content is available, show update notification
-                  if (confirm("New version available! Refresh to update?")) {
-                    window.location.reload();
-                  }
-                }
-              });
-            }
-          });
-
-          // Check for updates periodically (every 60 seconds)
-          setInterval(() => {
-            registration.update();
-          }, 60000);
-        } catch {
-          // Silently handle registration errors
-        }
-      };
-
-      registerSW();
+    if (!navigator.serviceWorker || process.env.NODE_ENV !== "production") {
+      return;
     }
+
+    const initializeServiceWorker = async () => {
+      try {
+        const registration = await registerOrGetServiceWorker();
+
+        // Listen for updates (both automatic and manual)
+        registration.addEventListener("updatefound", () => {
+          handleServiceWorkerUpdate(registration);
+        });
+      } catch (error) {
+        console.warn("Service worker failed:", error);
+      }
+    };
+
+    initializeServiceWorker();
   }, []);
 
-  return null; // This component doesn't render anything
+  return null;
 }
