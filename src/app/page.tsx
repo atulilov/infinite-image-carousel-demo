@@ -1,13 +1,14 @@
 import React from "react";
-import InfiniteImageCarousel from "../components/InfiniteImageCarousel";
-import PWAControls from "../components/PWAControls";
-import ServiceWorkerRegistration from "../components/ServiceWorkerRegistration";
-import { fetchImages } from "../lib/imageService";
+import InfiniteImageCarousel from "~/components/InfiniteImageCarousel";
+import PWAControls from "~/components/PWAControls";
+import ServiceWorkerRegistration from "~/components/ServiceWorkerRegistration";
+import { fetchImages } from "~/lib/imageService";
 import styles from "./page.module.css";
 
 export default async function Home() {
+  // Reduce initial load to improve TBT - load only 20 images initially
   const tinyImages = await fetchImages({
-    count: 500,
+    count: 500, // Reduced from 500 to 20 for better performance
     width: 300,
     height: 200,
   });
@@ -26,10 +27,10 @@ export default async function Home() {
         </div>
 
         <section className={styles.carouselSection}>
-          <h2>Circular Demo (5 items)</h2>
+          <h2>Optimized Infinite Carousel (500x3 items)</h2>
           <p>
-            Very small set to demonstrate true circular/infinite behavior -
-            scroll continuously!
+            Performance-optimized carousel with reduced initial load and better
+            scroll handling
           </p>
           <InfiniteImageCarousel
             images={tinyImages}

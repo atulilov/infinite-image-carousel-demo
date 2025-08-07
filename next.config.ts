@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Optimize bundle and improve loading performance
+  experimental: {
+    optimizePackageImports: ["react", "react-dom"],
+  },
+
   images: {
     remotePatterns: [
       {
@@ -9,7 +14,13 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
+    // Optimize image loading
+    formats: ["image/webp", "image/avif"],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
   },
+  compress: true,
   async headers() {
     return [
       {
