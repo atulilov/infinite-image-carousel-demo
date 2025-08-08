@@ -1,8 +1,17 @@
-/* Infinite Image Carousel - Minimal Essential Styles */
+/* InfiniteImageCarousel - Self-contained Component Styles */
+
 .carousel {
-  width: 100%;
+  --carousel-gap: 1rem;
+  --carousel-border-radius: 0.5rem;
+  --carousel-background: #ffffff;
+  --carousel-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
   position: relative;
+  width: 100%;
   overflow: hidden;
+  border-radius: var(--carousel-border-radius);
+  background: var(--carousel-background);
+  box-shadow: var(--carousel-shadow);
 }
 
 .container {
@@ -10,11 +19,10 @@
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-/* Hide scrollbar for webkit browsers */
 .container::-webkit-scrollbar {
   display: none;
 }
@@ -22,6 +30,7 @@
 .virtualContainer {
   position: relative;
   height: var(--item-height);
+  min-height: 150px;
 }
 
 .image {
@@ -29,4 +38,51 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  border-radius: 4px;
+  transition: transform 0.2s ease;
+}
+
+.image:hover {
+  transform: scale(1.02);
+}
+
+/* Dark mode support for standalone component */
+@media (prefers-color-scheme: dark) {
+  .carousel {
+    --carousel-background: #1a1a1a;
+    --carousel-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .image:hover {
+    transform: none;
+  }
+
+  .container {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .carousel {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .container {
+    scroll-behavior: auto;
+  }
+
+  .image {
+    transition: none;
+  }
+
+  .image:hover {
+    transform: none;
+  }
 }

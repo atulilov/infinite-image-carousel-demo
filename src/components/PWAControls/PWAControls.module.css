@@ -31,13 +31,13 @@
 
 .statusIndicator.online {
   background-color: rgba(34, 197, 94, 0.1);
-  color: #22c55e;
+  color: var(--color-accent);
   border-color: rgba(34, 197, 94, 0.2);
 }
 
 .statusIndicator.offline {
   background-color: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
+  color: var(--color-warning);
   border-color: rgba(239, 68, 68, 0.2);
 }
 
@@ -113,13 +113,12 @@
   gap: clamp(0.375rem, 1.5vw, 0.5rem);
   padding: clamp(0.375rem, 1.5vw, 0.5rem) clamp(0.75rem, 3vw, 1rem);
   background-color: rgba(34, 197, 94, 0.1);
-  color: #22c55e;
+  color: var(--color-accent);
   border: 1px solid rgba(34, 197, 94, 0.2);
   border-radius: 1.5rem;
   font-size: clamp(var(--text-xs), 2vw, var(--text-sm));
   font-weight: 500;
   backdrop-filter: blur(10px);
-  /* Better mobile touch target */
   min-height: 2.5rem;
 }
 
@@ -130,12 +129,12 @@
 }
 
 /* Responsive breakpoints */
-/* Mobile: up to 767px */
 @media (max-width: 767px) {
   .container {
     top: clamp(0.5rem, 2vw, 0.75rem);
     right: clamp(0.5rem, 2vw, 0.75rem);
     gap: clamp(0.25rem, 1vw, 0.375rem);
+    max-width: calc(100vw - 1rem);
   }
 
   .statusIndicator,
@@ -157,19 +156,12 @@
     height: clamp(0.25rem, 1vw, 0.375rem);
   }
 
-  /* Stack buttons horizontally on very small screens if needed */
-  .container {
-    max-width: calc(100vw - 1rem);
-  }
-
   .installButton,
   .shareButton {
-    /* Ensure buttons don't get too wide on mobile */
     max-width: 150px;
   }
 }
 
-/* Tablet: 768px – 1024px */
 @media (min-width: 768px) and (max-width: 1024px) {
   .container {
     top: clamp(0.75rem, 1.5vw, 1rem);
@@ -191,7 +183,6 @@
   }
 }
 
-/* Desktop: 1025px and above */
 @media (min-width: 1025px) {
   .container {
     top: 1rem;
@@ -199,7 +190,6 @@
     gap: 0.5rem;
   }
 
-  /* Enable better hover effects on desktop */
   .installButton:hover,
   .shareButton:hover {
     transform: translateY(-2px);
@@ -207,21 +197,17 @@
   }
 }
 
-/* Small mobile devices */
 @media (max-width: 480px) {
   .container {
-    /* Move slightly inward on very small screens */
     top: 0.5rem;
     right: 0.5rem;
   }
 
   .statusText {
-    /* Hide status text on very small screens, keep only dot */
     display: none;
   }
 
   .statusIndicator {
-    /* Make indicator more compact */
     padding: 0.5rem;
     min-width: 2rem;
     justify-content: center;
@@ -229,7 +215,6 @@
 
   .installButton,
   .shareButton {
-    /* Show only icons on very small screens */
     padding: 0.5rem;
     min-width: 2.5rem;
     justify-content: center;
@@ -241,7 +226,6 @@
   }
 }
 
-/* Large desktop screens */
 @media (min-width: 1280px) {
   .container {
     gap: 0.75rem;
@@ -266,12 +250,10 @@
 @media (hover: none) and (pointer: coarse) {
   .installButton,
   .shareButton {
-    /* Better touch targets */
     min-height: 2.75rem;
     padding: 0.625rem 1rem;
   }
 
-  /* Disable hover effects on touch devices */
   .installButton:hover,
   .shareButton:hover {
     transform: none;
@@ -305,23 +287,19 @@
   }
 
   .statusIndicator.online {
-    border-color: #22c55e;
+    border-color: var(--color-accent);
   }
 
   .statusIndicator.offline {
-    border-color: #ef4444;
+    border-color: var(--color-warning);
   }
 
   .installButton {
-    border-color: #000000;
-  }
-
-  .shareButton {
-    border-color: #ffffff;
+    border-color: var(--color-primary);
   }
 
   .installedIndicator {
-    border-color: #22c55e;
+    border-color: var(--color-accent);
   }
 }
 

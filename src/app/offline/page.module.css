@@ -23,7 +23,7 @@
   width: clamp(4rem, 15vw, 6rem);
   height: clamp(4rem, 15vw, 6rem);
   margin: 0 auto clamp(1rem, 3vw, 1.5rem);
-  color: #666;
+  color: var(--color-secondary);
 }
 
 .title {
@@ -34,7 +34,7 @@
 }
 
 .description {
-  color: #666;
+  color: var(--color-secondary);
   margin-bottom: clamp(1.5rem, 4vw, 2rem);
   line-height: 1.6;
   font-size: clamp(var(--text-base), 2.5vw, var(--text-lg));
@@ -68,7 +68,7 @@
 
 .secondaryButton {
   width: 100%;
-  border: 1px solid #666;
+  border: 1px solid var(--color-secondary);
   color: var(--foreground);
   background: transparent;
   padding: clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.5rem);
@@ -88,12 +88,10 @@
 .footer {
   margin-top: clamp(1.5rem, 4vw, 2rem);
   font-size: clamp(var(--text-xs), 2vw, var(--text-sm));
-  color: #999;
+  color: var(--color-secondary);
   line-height: 1.5;
 }
 
-/* Responsive breakpoints */
-/* Mobile: up to 767px */
 @media (max-width: 767px) {
   .container {
     padding: clamp(1rem, 4vw, 1.5rem);
@@ -104,7 +102,6 @@
   }
 }
 
-/* Tablet: 768px – 1024px */
 @media (min-width: 768px) and (max-width: 1024px) {
   .buttonContainer {
     flex-direction: row;
@@ -117,7 +114,6 @@
   }
 }
 
-/* Desktop: 1025px and above */
 @media (min-width: 1025px) {
   .buttonContainer {
     flex-direction: row;
@@ -134,12 +130,9 @@
 
 /* Dark mode adjustments */
 @media (prefers-color-scheme: dark) {
-  .description {
-    color: #ccc;
-  }
-
+  .description,
   .footer {
-    color: #888;
+    color: #ccc;
   }
 
   .secondaryButton {
@@ -183,12 +176,10 @@
 @media (hover: none) and (pointer: coarse) {
   .primaryButton,
   .secondaryButton {
-    /* Better touch targets */
     min-height: 3rem;
     padding: 1rem 1.5rem;
   }
 
-  /* Disable hover effects on touch devices */
   .primaryButton:hover,
   .secondaryButton:hover {
     transform: none;

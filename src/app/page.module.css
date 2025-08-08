@@ -2,7 +2,6 @@
   --gray-rgb: 0, 0, 0;
   --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
   --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
-
   --button-primary-hover: #383838;
   --button-secondary-hover: #f2f2f2;
 
@@ -21,7 +20,6 @@
     --gray-rgb: 255, 255, 255;
     --gray-alpha-200: rgba(var(--gray-rgb), 0.145);
     --gray-alpha-100: rgba(var(--gray-rgb), 0.06);
-
     --button-primary-hover: #ccc;
     --button-secondary-hover: #1a1a1a;
   }
@@ -45,7 +43,11 @@
   font-size: clamp(var(--text-2xl), 5vw, var(--text-5xl));
   font-weight: 600;
   margin-bottom: clamp(0.5rem, 2vw, 1rem);
-  background: linear-gradient(180deg, #000 0%, #666 100%);
+  background: linear-gradient(
+    180deg,
+    var(--color-primary) 0%,
+    var(--color-secondary) 100%
+  );
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -54,7 +56,7 @@
 
 .header p {
   font-size: clamp(var(--text-base), 2.5vw, var(--text-lg));
-  color: #666;
+  color: var(--color-secondary);
   max-width: min(600px, 90vw);
   margin: 0 auto;
   line-height: 1.6;
@@ -68,13 +70,13 @@
   font-size: clamp(var(--text-lg), 3vw, var(--text-2xl));
   font-weight: 500;
   margin-bottom: clamp(0.25rem, 1vw, 0.5rem);
-  color: #333;
+  color: var(--color-primary);
   line-height: 1.3;
 }
 
 .carouselSection p {
   font-size: clamp(var(--text-sm), 2vw, var(--text-base));
-  color: #666;
+  color: var(--color-secondary);
   margin-bottom: clamp(0.75rem, 2vw, 1rem);
   line-height: 1.5;
 }
@@ -84,14 +86,14 @@
   align-items: center;
   justify-content: center;
   height: clamp(150px, 25vw, 200px);
-  background: #f9f9f9;
+  background: var(--color-neutral);
   border-radius: 8px;
-  color: #666;
+  color: var(--color-secondary);
   font-size: clamp(var(--text-sm), 2.5vw, var(--text-base));
 }
 
 .features {
-  background: #f8f9fa;
+  background: var(--color-neutral);
   padding: clamp(1.5rem, 4vw, 2rem);
   border-radius: 12px;
   margin-top: clamp(1.5rem, 4vw, 2rem);
@@ -101,7 +103,7 @@
   font-size: clamp(var(--text-lg), 3vw, var(--text-2xl));
   font-weight: 600;
   margin-bottom: clamp(1rem, 3vw, 1.25rem);
-  color: #333;
+  color: var(--color-primary);
 }
 
 .features ul {
@@ -115,7 +117,7 @@
 .features li {
   padding: clamp(0.5rem, 1.5vw, 0.75rem) 0;
   font-size: clamp(var(--text-sm), 2vw, var(--text-base));
-  color: #555;
+  color: var(--color-secondary);
   display: flex;
   align-items: center;
   line-height: 1.5;
@@ -130,29 +132,18 @@
     -webkit-text-fill-color: transparent;
   }
 
-  .header p {
-    color: #ccc;
-  }
-
-  .carouselSection h2 {
-    color: #fff;
-  }
-
+  .header p,
   .carouselSection p {
     color: #ccc;
   }
 
-  .loading {
-    background: #1a1a1a;
-    color: #ccc;
-  }
-
-  .features {
-    background: #1a1a1a;
-  }
-
+  .carouselSection h2,
   .features h2 {
     color: #fff;
+  }
+
+  .loading {
+    color: #ccc;
   }
 
   .features li {
@@ -160,16 +151,19 @@
   }
 }
 
-/* Responsive breakpoints */
 /* Mobile: up to 767px */
 @media (max-width: 767px) {
   .page {
     padding: clamp(1rem, 4vw, 1.5rem);
     gap: clamp(1.5rem, 6vw, 2rem);
+    touch-action: pan-y;
+    overflow-x: hidden;
   }
 
   .main {
     gap: clamp(1rem, 4vw, 1.5rem);
+    align-items: center;
+    overflow-x: hidden;
   }
 
   .header {
@@ -178,6 +172,8 @@
 
   .carouselSection {
     margin-bottom: clamp(1.5rem, 5vw, 2rem);
+    width: 100%;
+    overflow-x: hidden;
   }
 
   .features {
@@ -189,37 +185,29 @@
     grid-template-columns: 1fr;
     gap: clamp(0.5rem, 2vw, 0.75rem);
   }
-}
 
-/* Tablet: 768px – 1024px */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .page {
-    padding: clamp(2rem, 6vw, 3rem);
-    gap: clamp(2.5rem, 6vw, 3rem);
+  .main ol {
+    text-align: center;
   }
 
-  .main {
-    gap: clamp(1.5rem, 4vw, 2rem);
+  .ctas {
+    flex-direction: column;
+    width: 100%;
   }
 
-  .features ul {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
-}
-
-/* Desktop: 1025px and above */
-@media (min-width: 1025px) {
-  .page {
-    padding: clamp(3rem, 8vw, 5rem);
-    gap: clamp(3rem, 8vw, 4rem);
+  .ctas a {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
   }
 
-  .main {
-    gap: clamp(2rem, 4vw, 2.5rem);
+  a.secondary {
+    min-width: auto;
   }
 
-  .features ul {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  .footer {
+    flex-direction: column;
+    gap: clamp(0.75rem, 3vw, 1rem);
   }
 }
 
@@ -309,7 +297,42 @@ a.secondary {
   height: auto;
 }
 
-/* Enable hover only on non-touch devices */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .page {
+    padding: clamp(2rem, 6vw, 3rem);
+    gap: clamp(2.5rem, 6vw, 3rem);
+  }
+
+  .main {
+    gap: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  .features ul {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .ctas,
+  .footer {
+    justify-content: center;
+  }
+}
+
+@media (min-width: 1025px) {
+  .page {
+    padding: clamp(3rem, 8vw, 5rem);
+    gap: clamp(3rem, 8vw, 4rem);
+  }
+
+  .main {
+    gap: clamp(2rem, 4vw, 2.5rem);
+  }
+
+  .features ul {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+/* Hover effects for non-touch devices */
 @media (hover: hover) and (pointer: fine) {
   a.primary:hover {
     background: var(--button-primary-hover);
@@ -326,62 +349,6 @@ a.secondary {
   .footer a:hover {
     text-decoration: underline;
     text-underline-offset: 4px;
-  }
-}
-
-/* Mobile-specific adjustments */
-@media (max-width: 767px) {
-  .page {
-    /* Ensure proper touch scrolling */
-    touch-action: pan-y;
-    overflow-x: hidden;
-  }
-
-  .main {
-    align-items: center;
-    /* Ensure carousel container doesn't overflow */
-    overflow-x: hidden;
-  }
-
-  .carouselSection {
-    /* Allow carousel to use full width */
-    width: 100%;
-    overflow-x: hidden;
-  }
-
-  .main ol {
-    text-align: center;
-  }
-
-  .ctas {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .ctas a {
-    width: 100%;
-    max-width: 300px;
-    margin: 0 auto;
-  }
-
-  a.secondary {
-    min-width: auto;
-  }
-
-  .footer {
-    flex-direction: column;
-    gap: clamp(0.75rem, 3vw, 1rem);
-  }
-}
-
-/* Tablet adjustments */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .ctas {
-    justify-content: center;
-  }
-
-  .footer {
-    justify-content: center;
   }
 }
 

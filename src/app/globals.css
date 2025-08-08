@@ -1,6 +1,14 @@
 :root {
+  /* Global Color Palette - 5 Main Colors */
+  --color-primary: #171717; /* Deep Dark Gray */
+  --color-secondary: #666666; /* Medium Gray */
+  --color-accent: #22c55e; /* Success Green */
+  --color-warning: #ef4444; /* Error Red */
+  --color-neutral: #f8f9fa; /* Light Background */
+
+  /* Theme Colors */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: var(--color-primary);
 
   /* Responsive spacing scale */
   --spacing-xs: 0.25rem;
@@ -39,6 +47,7 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --color-neutral: #1a1a1a;
   }
 }
 
