@@ -3,9 +3,6 @@
 import { useEffect, type FC } from "react";
 import Image from "next/image";
 
-import styles from "./InfiniteImageCarousel.module.css";
-import type { InfiniteImageCarouselProps } from "./InfiniteImageCarousel.types";
-
 import {
   useCarouselData,
   useInfiniteScroll,
@@ -16,6 +13,10 @@ import {
   createContainerStyle,
   createItemStyle,
 } from "./InfiniteImageCarousel.utils";
+
+import type { InfiniteImageCarouselProps } from "./InfiniteImageCarousel.types";
+
+import styles from "./InfiniteImageCarousel.module.css";
 
 const InfiniteImageCarousel: FC<InfiniteImageCarouselProps> = ({
   images,
@@ -66,7 +67,7 @@ const InfiniteImageCarousel: FC<InfiniteImageCarouselProps> = ({
         <div className={styles.virtualContainer} style={{ width: totalWidth }}>
           {visibleItems.map(({ index, left }) => {
             const image = extendedImages[index];
-            if (!image) return null;
+            if (!image) return;
 
             return (
               <div

@@ -6,6 +6,7 @@ import {
   useMemo,
   type RefObject,
 } from "react";
+
 import type {
   CarouselImage,
   UseInfiniteScrollParams,
@@ -13,7 +14,6 @@ import type {
   VisibleItem,
 } from "./InfiniteImageCarousel.types";
 
-// Pure utility functions
 export const createExtendedImageArray = (images: CarouselImage[]) => {
   const cloneCount = Math.min(5, Math.ceil(images.length / 2));
   const lastItems = images.slice(-cloneCount);
