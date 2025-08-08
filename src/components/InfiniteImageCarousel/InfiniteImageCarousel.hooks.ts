@@ -6,26 +6,12 @@ import {
   useMemo,
   type RefObject,
 } from "react";
-import type { CarouselImage } from "./InfiniteImageCarousel.types";
-
-// Types
-interface UseInfiniteScrollParams {
-  itemTotalWidth: number;
-  originalStartIndex: number;
-  originalEndIndex: number;
-}
-
-interface VirtualizationConfig {
-  scrollLeft: number;
-  containerWidth: number;
-  itemTotalWidth: number;
-  totalItems: number;
-}
-
-interface VisibleItem {
-  index: number;
-  left: number;
-}
+import type {
+  CarouselImage,
+  UseInfiniteScrollParams,
+  VirtualizationConfig,
+  VisibleItem,
+} from "./InfiniteImageCarousel.types";
 
 // Pure utility functions
 export const createExtendedImageArray = (images: CarouselImage[]) => {

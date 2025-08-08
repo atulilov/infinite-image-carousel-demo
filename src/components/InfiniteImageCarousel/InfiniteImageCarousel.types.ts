@@ -12,3 +12,21 @@ export interface InfiniteImageCarouselProps {
   itemHeight: number;
   gap?: number;
 }
+
+export interface UseInfiniteScrollParams {
+  itemTotalWidth: number;
+  originalStartIndex: number;
+  originalEndIndex: number;
+}
+
+export interface VirtualizationConfig {
+  scrollLeft: number;
+  containerWidth: number;
+  itemTotalWidth: number;
+  totalItems: number;
+}
+
+export interface VisibleItem {
+  index: number;
+  left: number;
+}
