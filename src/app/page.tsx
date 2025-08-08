@@ -14,6 +14,10 @@ const Home: FC = async () => {
     height: 200,
   });
 
+  const repeatedArray = Array.from({ length: 10 }, () => [
+    ...tinyImages,
+  ]).flat();
+
   return (
     <div className={styles.page}>
       <ServiceWorkerRegistration />
@@ -32,6 +36,20 @@ const Home: FC = async () => {
           </p>
           <InfiniteImageCarousel
             images={tinyImages}
+            itemWidth={300}
+            itemHeight={200}
+            gap={16}
+          />
+        </section>
+
+        <section className={styles.carouselSection}>
+          <h2>Optimized Infinite Carousel (1000 items)</h2>
+          <p>
+            Performance-optimized carousel with reduced initial load and better
+            scroll handling
+          </p>
+          <InfiniteImageCarousel
+            images={repeatedArray}
             itemWidth={300}
             itemHeight={200}
             gap={16}
