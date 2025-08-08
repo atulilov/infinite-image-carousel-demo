@@ -199,182 +199,73 @@ The app supports Progressive Web App capabilities:
 - **Background Sync**: Efficient resource caching
 - **Responsive**: Optimized for all screen sizes
 
-## 📄 License
-
-This project is private and not licensed for public distribution.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📞 Support
-
-For questions or support, please contact the development team or create an issue in the repository.
-
 ## 🎯 How the Infinite Scroll Works
 
-The infinite scroll is achieved by creating three copies of the image array and intelligently repositioning the scroll when the user approaches the edges:
+The infinite scroll creates a seamless looping experience by:
 
-1. **Triple Array**: `[images, images, images]` ensures content in all directions
-2. **Smart Repositioning**: When scrolling near edges, instantly jump to equivalent position in middle section
-3. **Buffer Zones**: Uses generous buffer zones to ensure jumps happen off-screen
-4. **Seamless Experience**: Users never see the repositioning - it feels truly infinite
+1. **Extended Array**: Creates copies of the original images to provide content in all scroll directions
+2. **Smart Repositioning**: When scrolling approaches edges, seamlessly jumps to equivalent position
+3. **Buffer Zones**: Uses buffer zones to ensure repositioning happens off-screen
+4. **Virtualization**: Only renders visible items for optimal performance with large datasets
 
-## 📁 Project Structure
+## � API Reference
 
-```
-src/
-├── app/                          # Next.js App Router
-│   ├── page.tsx                 # Main demo page
-│   ├── layout.tsx               # Root layout
-│   └── globals.css              # Global styles
-├── components/                   # Reusable UI components
-│   ├── InfiniteImageCarousel/   # Main carousel component
-│   │   ├── InfiniteImageCarousel.tsx
-│   │   ├── InfiniteImageCarousel.hooks.ts
-│   │   ├── InfiniteImageCarousel.types.ts
-│   │   ├── InfiniteImageCarousel.utils.ts
-│   │   ├── InfiniteImageCarousel.module.css
-│   │   └── InfiniteImageCarousel.test.tsx
-│   ├── PWAControls/             # PWA installation controls
-│   └── ServiceWorkerRegistration/ # SW registration logic
-├── hooks/                       # Custom React hooks
-│   └── usePWA.ts               # PWA functionality hook
-├── lib/                        # Utility libraries
-│   └── imageService.ts         # Image fetching service
-└── pages/                      # Additional pages
-```
+### fetchImages Function
 
-## Usage
+The only available image fetching function:
 
-```tsx
-import InfiniteImageCarousel from "~/components/InfiniteImageCarousel";
-import { fetchImages, fetchLargeImages } from "~/lib/imageService";
+```typescript
+import { fetchImages } from "~/lib/imageService";
 
 const images = await fetchImages({
-  count: 100,
-  width: 300,
-  height: 200,
-});
-
-export function App() {
-  return (
-    <InfiniteImageCarousel
-      images={images}
-      itemWidth={300}
-      itemHeight={200}
-      gap={16}
-    />
-  );
-}
-```
-
-### Advanced Image Fetching
-
-#### Standard Fetching
-
-```typescript
-const images = await fetchImages({
-  count: 100,
-  width: 400,
-  height: 300,
+  count: 50, // Optional: Number of images (default: 20, max: 100)
+  width: 400, // Optional: Image width (default: 400)
+  height: 300, // Optional: Image height (default: 300)
 });
 ```
-
-#### Large Dataset Fetching (1000+ images)
-
-```typescript
-const largeImageSet = await fetchLargeImages({
-  count: 1000, // Total images needed
-  width: 400, // Image width
-  height: 300, // Image height
-  limit: 50, // Images per API call
-  page: 1, // Starting page
-});
-```
-
-#### Array Multiplication for Performance
-
-```typescript
-// Multiply existing array to create larger datasets without API calls
-const repeatedArray = Array.from({ length: 10 }, () => [...images]).flat();
-// Creates 1000 images from 100 original images
-```
-
-````
-
-## Props & Configuration
 
 ### InfiniteImageCarousel Props
 
-| Prop | Type | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| `images` | CarouselImage[] | ✅ | - | Array of image objects |
-| `itemWidth` | number | ✅ | - | Width of each carousel item in pixels |
-| `itemHeight` | number | ✅ | - | Height of each carousel item in pixels |
-| `gap` | number | ❌ | 0 | Space between carousel items |
-
-### Image Service Options
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `count` | number | 20 | Number of images to fetch |
-| `width` | number | 400 | Image width in pixels |
-| `height` | number | 300 | Image height in pixels |
-| `page` | number | 1 | Starting page for pagination |
-| `limit` | number | 50 | Images per API request (max: 100) |
+```typescript
+interface InfiniteImageCarouselProps {
+  images: CarouselImage[]; // Required: Array of image objects
+  itemWidth: number; // Required: Width of each item in pixels
+  itemHeight: number; // Required: Height of each item in pixels
+  gap?: number; // Optional: Gap between items (default: 0)
+}
+```
 
 ### CarouselImage Interface
 
 ```typescript
 interface CarouselImage {
-  id: string;
-  url: string;
-  alt: string;
-  width: number;
-  height: number;
+  id: string; // Unique identifier
+  url: string; // Image URL
+  alt: string; // Alt text for accessibility
+  width?: number; // Optional: Image width
+  height?: number; // Optional: Image height
 }
-````
+```
 
-## 🚦 API Rate Limiting & Performance
+## 🚀 Performance Tips
 
-The image service implements intelligent rate limiting to prevent API timeouts:
+For large datasets, multiply smaller arrays instead of making excessive API calls:
 
-- **Sequential requests** with 100ms delays between calls
-- **Graceful error handling** for failed requests
-- **Fallback strategies** for offline scenarios
-- **Configurable request limits** (recommended: 50 per call)
-- **Smart pagination** for large datasets
-
-## 📱 PWA Features
-
-This app is installable as a PWA with:
-
-- **Offline support** via service workers
-- **App-like experience** on mobile devices
-- **Background synchronization**
-- **Push notifications** (infrastructure ready)
-- **Automatic updates** for cached content
-
-Install the PWA by clicking the install button when prompted or through your browser's menu.
+```typescript
+// Efficient way to create large datasets
+const baseImages = await fetchImages({ count: 100 });
+const largeDataset = Array.from({ length: 10 }, () => [...baseImages]).flat();
+// Creates 1000 items from 100 API calls instead of 1000 calls
+```
 
 ## 🧪 Testing
 
 The project includes comprehensive testing setup:
 
 ```bash
-# Run all tests
-yarn test
-
-# Run tests in watch mode
-yarn test --watch
-
-# Run tests with coverage
-yarn test --coverage
+yarn test              # Run all tests
+yarn test --watch     # Run tests in watch mode
+yarn test --coverage  # Run tests with coverage
 ```
 
 Tests cover:
@@ -383,39 +274,25 @@ Tests cover:
 - Image loading and error states
 - Infinite scroll logic
 - PWA functionality
-- API service methods
 
-## 🎨 Styling Architecture
+## 📱 PWA Features
 
-- **CSS Modules** for component isolation and scoped styles
-- **Mobile-first** responsive design approach
-- **CSS Variables** for consistent theming and easy customization
-- **Performance optimized** styles with minimal reflows
+The app supports Progressive Web App capabilities:
 
-## 🌟 Performance Features
+- **Installable**: Add to home screen on mobile/desktop
+- **Offline Support**: Works without internet connection via service worker
+- **Background Sync**: Efficient resource caching
+- **Responsive**: Optimized for all screen sizes
 
-- **Server-side rendering** for fast initial page loads
-- **Image optimization** with Next.js Image component
-- **Code splitting** and dynamic imports for smaller bundles
-- **Bundle optimization** with Turbopack
-- **Memory management** for large image datasets
-- **Virtualization-ready** architecture
-
-## 📈 Browser Support
-
-- **Modern browsers** (Chrome 88+, Firefox 85+, Safari 14+, Edge 88+)
-- **Mobile browsers** with full touch support
-- **PWA installation** support across platforms
-- **Service Worker** compatibility for offline features
+Install by clicking the install button when prompted or through your browser's menu.
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Run tests (`yarn test`)
-4. Commit your changes (`git commit -m 'Add amazing feature'`)
-5. Push to the branch (`git push origin feature/amazing-feature`)
-6. Open a Pull Request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 Please ensure your code:
 
@@ -432,18 +309,4 @@ This project is open source and available under the [MIT License](LICENSE).
 
 - **[Picsum Photos](https://picsum.photos/)** for providing the beautiful image API
 - **[Next.js team](https://nextjs.org/)** for the amazing React framework
-- **[Unsplash](https://unsplash.com/)** photographers for the stunning imagery
-- **React team** for the powerful and flexible UI library
-
----
-
-<div align="center">
-  <p>🎠 <strong>Built with ❤️ using modern web technologies</strong> 🎠</p>
-  <p>
-    <a href="#-features">Features</a> •
-    <a href="#-getting-started">Getting Started</a> •
-    <a href="#usage">Usage</a> •
-    <a href="#-pwa-features">PWA</a> •
-    <a href="#-testing">Testing</a>
-  </p>
-</div>
+- **React team** for the powerful UI library
