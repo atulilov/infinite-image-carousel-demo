@@ -32,7 +32,6 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
   gap = 16,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
 
@@ -87,32 +86,30 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
     const currentScrollLeft = container.scrollLeft;
     setScrollLeft(currentScrollLeft);
 
-    // Calculate current item index based on scroll position
-    const currentIndex = Math.round(currentScrollLeft / itemTotalWidth);
+    // Use precise positioning instead of rounded indices for seamless transitions
+    const originalSectionStart = originalStartIndex * itemTotalWidth;
+    const originalSectionEnd = originalEndIndex * itemTotalWidth;
 
-    // Infinite loop logic: jump to opposite end when reaching cloned items
-    if (currentIndex < originalStartIndex) {
+    // Check if we're in the left clone section (need to jump to end)
+    if (currentScrollLeft < originalSectionStart) {
+      const offsetWithinClone = currentScrollLeft;
       const targetScroll =
-        (originalEndIndex - (originalStartIndex - currentIndex)) *
-        itemTotalWidth;
+        originalSectionEnd - (originalSectionStart - offsetWithinClone);
       container.scrollTo({ left: targetScroll, behavior: "instant" });
-    } else if (currentIndex >= originalEndIndex) {
-      const targetScroll =
-        (originalStartIndex + (currentIndex - originalEndIndex)) *
-        itemTotalWidth;
+      setScrollLeft(targetScroll);
+    }
+    // Check if we're in the right clone section (need to jump to start)
+    else if (currentScrollLeft >= originalSectionEnd) {
+      const offsetBeyondEnd = currentScrollLeft - originalSectionEnd;
+      const targetScroll = originalSectionStart + offsetBeyondEnd;
       container.scrollTo({ left: targetScroll, behavior: "instant" });
+      setScrollLeft(targetScroll);
     }
   }, [itemTotalWidth, originalStartIndex, originalEndIndex]);
 
-  // Debounced scroll handler
-  const debouncedScrollHandler = useCallback(() => {
-    if (scrollTimeoutRef.current) {
-      clearTimeout(scrollTimeoutRef.current);
-    }
-
+  // Immediate scroll handler for smooth infinite loop
+  const immediateScrollHandler = useCallback(() => {
     handleScroll();
-
-    scrollTimeoutRef.current = setTimeout(() => {}, 150);
   }, [handleScroll]);
 
   // Initialize and handle resize for virtualization
@@ -138,21 +135,12 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
     };
   }, [itemTotalWidth, originalStartIndex]);
 
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-    };
-  }, []);
-
   return (
     <div className={styles.carousel}>
       <div
         ref={containerRef}
         className={styles.container}
-        onScroll={debouncedScrollHandler}
+        onScroll={immediateScrollHandler}
         style={
           {
             "--item-width": `${itemWidth}px`,
