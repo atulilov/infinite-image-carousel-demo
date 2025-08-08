@@ -1,91 +1,219 @@
-# 🎠 Infinite Image Carousel Demo
+# Infinite Image Carousel
 
-A high-performance, scroll-based infinite image carousel built with **Next.js 15**, **React 19**, and **TypeScript**. This project demonstrates modern web development practices, progressive web app (PWA) capabilities, and advanced image handling techniques.
+A high-performance, scroll-based infinite image carousel built with Next.js 15, React 19, and TypeScript. Features PWA capabilities, offline support, and optimized virtualization for smooth performance with hundreds or thousands of images.
 
 ## ✨ Features
 
-### 🚀 Performance Optimized
+- **Infinite Scrolling**: Seamless infinite carousel with scroll-based navigation
+- **Performance Optimized**: Virtualization ensures smooth scrolling with large datasets
+- **PWA Support**: Install as a Progressive Web App with offline capabilities
+- **Responsive Design**: Mobile-first approach with touch-friendly interactions
+- **Image Optimization**: Built-in Next.js image optimization with WebP/AVIF support
+- **TypeScript**: Fully typed with strict TypeScript configuration
+- **Accessibility**: WCAG compliant with proper ARIA labels and keyboard navigation
+- **Service Worker**: Offline-first architecture with intelligent caching
 
-- **True Infinite Scroll**: Items loop seamlessly in a circle with no visible jumps or resets
-- **Scroll-Only Navigation**: No buttons or arrows - navigation is entirely scroll-based
-- **Lazy loading** and image optimization using Next.js Image component
-- **Virtualization-ready** architecture for handling thousands of images
-- **Memory efficient** with proper cleanup and memoization
-
-### 🌐 Modern Web Technologies
-
-- **Next.js 15** with App Router and Turbopack for lightning-fast development
-- **React 19** with modern hooks and functional components
-- **TypeScript** with strict type checking for robust code
-- **CSS Modules** for component-scoped styling
-- **PWA support** with service workers and offline capabilities
-
-### 📱 Progressive Web App (PWA)
-
-- **Service Worker** for offline functionality
-- **Installable** as a native app on mobile and desktop
-- **Cache strategies** for optimal performance
-- **Background sync** capabilities
-
-### 🎨 Advanced Image Handling
-
-- **Multiple API integration strategies** (Picsum Photos API)
-- **Batch fetching** with pagination support for 1000+ images
-- **Rate limiting** to prevent API timeouts
-- **Graceful error handling** with fallback images
-- **Responsive image sizing** with customizable dimensions
-
-## 🛠️ Tech Stack
-
-- **Framework**: Next.js 15 (App Router)
-- **Runtime**: React 19
-- **Language**: TypeScript
-- **Styling**: CSS Modules
-- **Testing**: Jest + Testing Library
-- **Linting**: ESLint + Prettier
-- **Build Tool**: Turbopack
-- **Image API**: Picsum Photos
-- **PWA**: Service Workers + Web App Manifest
-
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
 
 - Node.js 18+
-- Yarn or npm
+- Yarn or npm package manager
 
 ### Installation
 
-```bash
-# Clone the repository
-git clone https://github.com/atulilov/infinite-image-carousel-demo.git
-cd infinite-image-carousel-demo
+1. Clone the repository:
 
-# Install dependencies
+```bash
+git clone <repository-url>
+cd infinite-image-carousel
+```
+
+2. Install dependencies:
+
+```bash
 yarn install
 # or
 npm install
+```
 
-# Start the development server
+3. Start the development server:
+
+```bash
 yarn dev
 # or
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to see the demo.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-### Development Scripts
+## 📜 Available Scripts
 
-```bash
-yarn dev          # Start development server with Turbopack
-yarn build        # Build for production
-yarn start        # Start production server
-yarn lint         # Run ESLint
-yarn lint:fix     # Fix ESLint issues
-yarn format       # Format code with Prettier
-yarn test         # Run tests
-yarn type-check   # Run TypeScript type checking
+| Command             | Description                             |
+| ------------------- | --------------------------------------- |
+| `yarn dev`          | Start development server with Turbopack |
+| `yarn build`        | Build optimized production bundle       |
+| `yarn start`        | Start production server                 |
+| `yarn lint`         | Run ESLint for code quality             |
+| `yarn lint:fix`     | Fix ESLint issues automatically         |
+| `yarn format`       | Format code with Prettier               |
+| `yarn format:check` | Check code formatting                   |
+| `yarn type-check`   | Run TypeScript type checking            |
+| `yarn test`         | Run Jest tests                          |
+
+## 🏗️ Project Structure
+
 ```
+├── public/                     # Static assets and PWA files
+│   ├── manifest.json          # PWA manifest
+│   ├── sw.js                 # Service worker
+│   └── *.png                 # App icons
+├── src/
+│   ├── app/                  # Next.js App Router
+│   │   ├── page.tsx         # Main page component
+│   │   └── globals.css      # Global styles
+│   ├── components/          # Reusable React components
+│   │   ├── InfiniteImageCarousel/  # Main carousel component
+│   │   ├── PWAControls/           # PWA installation controls
+│   │   └── ServiceWorkerRegistration/
+│   ├── hooks/               # Custom React hooks
+│   │   └── usePWA.ts       # PWA functionality hook
+│   └── lib/                # Utility libraries
+│       └── imageService.ts # Image fetching service
+└── *.config.*             # Configuration files
+```
+
+## 🎯 Usage Examples
+
+### Basic Carousel
+
+```tsx
+import InfiniteImageCarousel from "~/components/InfiniteImageCarousel";
+
+const MyComponent = () => {
+  const images = [
+    { id: "1", url: "/image1.jpg", alt: "Image 1", width: 300, height: 200 },
+    { id: "2", url: "/image2.jpg", alt: "Image 2", width: 300, height: 200 },
+    // ... more images
+  ];
+
+  return (
+    <InfiniteImageCarousel
+      images={images}
+      itemWidth={300}
+      itemHeight={200}
+      gap={16}
+    />
+  );
+};
+```
+
+### Fetching Images Dynamically
+
+```tsx
+import { fetchImages } from "~/lib/imageService";
+
+const MyPage = async () => {
+  const images = await fetchImages({
+    count: 50,
+    width: 400,
+    height: 300,
+  });
+
+  return (
+    <InfiniteImageCarousel images={images} itemWidth={400} itemHeight={300} />
+  );
+};
+```
+
+## ⚙️ Configuration
+
+### Environment Setup
+
+The project uses sensible defaults and doesn't require environment variables for basic functionality. However, you can customize:
+
+- **Image Service**: Modify `src/lib/imageService.ts` to use your preferred image API
+- **PWA Settings**: Update `public/manifest.json` for your app metadata
+- **Styling**: Customize CSS modules in component directories
+
+### Next.js Configuration
+
+Key configuration features in `next.config.ts`:
+
+- **Image Optimization**: WebP/AVIF formats with optimized sizes
+- **Security Headers**: Content security and frame protection
+- **PWA Support**: Service worker and manifest integration
+- **Performance**: Bundle optimization and compression
+
+## 🛠️ Technologies Used
+
+### Core Framework
+
+- **Next.js 15**: React framework with App Router
+- **React 19**: Latest React with concurrent features
+- **TypeScript**: Strict type safety and developer experience
+
+### Development Tools
+
+- **Turbopack**: Ultra-fast development builds
+- **ESLint**: Code quality and consistency
+- **Prettier**: Code formatting
+- **Husky**: Git hooks for code quality
+- **Jest**: Unit testing framework
+
+### Testing & Quality
+
+- **@testing-library/react**: Component testing utilities
+- **@testing-library/jest-dom**: Custom Jest matchers
+- **Lint-staged**: Run linters on staged files
+
+## 🔧 Development Guidelines
+
+### Code Quality
+
+- Strict TypeScript configuration with no `any` types
+- ESLint rules for React, accessibility, and hooks
+- Prettier for consistent formatting
+- Pre-commit hooks ensure code quality
+
+### Performance Best Practices
+
+- Virtualization for large image lists
+- Image optimization with Next.js Image component
+- Memoization using React.memo, useCallback, useMemo
+- Service worker caching for offline performance
+
+### Component Architecture
+
+- Functional components with hooks
+- Custom hooks for reusable logic
+- CSS Modules for component-scoped styling
+- TypeScript interfaces for all props
+
+## 📱 PWA Features
+
+The app supports Progressive Web App capabilities:
+
+- **Installable**: Add to home screen on mobile/desktop
+- **Offline Support**: Works without internet connection
+- **Background Sync**: Efficient resource caching
+- **Responsive**: Optimized for all screen sizes
+
+## 📄 License
+
+This project is private and not licensed for public distribution.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📞 Support
+
+For questions or support, please contact the development team or create an issue in the repository.
 
 ## 🎯 How the Infinite Scroll Works
 
