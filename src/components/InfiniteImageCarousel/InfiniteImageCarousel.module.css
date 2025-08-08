@@ -6,13 +6,12 @@
 }
 
 .container {
-  display: flex;
+  position: relative;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
-  gap: var(--gap);
   padding: 0 var(--gap);
 
   /* Webkit scrollbar styling */
@@ -35,11 +34,14 @@
   }
 }
 
+.virtualContainer {
+  position: relative;
+  height: var(--item-height);
+}
+
 .imageWrapper {
-  flex-shrink: 0;
   width: var(--item-width);
   height: var(--item-height);
-  position: relative;
   border-radius: 8px;
   overflow: hidden;
   background: #f0f0f0;

@@ -6,9 +6,8 @@ import { fetchImages } from "~/lib/imageService";
 import styles from "./page.module.css";
 
 export default async function Home() {
-  // Reduce initial load to improve TBT - load only 20 images initially
   const tinyImages = await fetchImages({
-    count: 100, // Reduced from 500 to 20 for better performance
+    count: 10,
     width: 300,
     height: 200,
   });

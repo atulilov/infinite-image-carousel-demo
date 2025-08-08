@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useRef, useCallback, useEffect } from "react";
+import React, {
+  useRef,
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+} from "react";
 import Image from "next/image";
 import styles from "./InfiniteImageCarousel.module.css";
 
@@ -27,40 +33,70 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [containerWidth, setContainerWidth] = useState(0);
 
   // Create extended array for infinite loop illusion
-  // Clone first and last items to enable seamless infinite scrolling
-  const extendedImages = React.useMemo(() => {
+  const extendedImages = useMemo(() => {
     const cloneCount = Math.min(5, Math.ceil(images.length / 2));
     const lastItems = images.slice(-cloneCount);
     const firstItems = images.slice(0, cloneCount);
     return [...lastItems, ...images, ...firstItems];
   }, [images]);
 
-  // Calculate dimensions for scroll logic
+  // Calculate dimensions for scroll logic and virtualization
   const itemTotalWidth = itemWidth + gap;
   const originalStartIndex = Math.min(5, Math.ceil(images.length / 2));
   const originalEndIndex = originalStartIndex + images.length;
+  const totalWidth = extendedImages.length * itemTotalWidth;
 
-  // Handle infinite scroll logic
+  // Virtualization: Calculate visible range with buffer
+  const bufferSize = 5;
+  const startIndex = Math.max(
+    0,
+    Math.floor(scrollLeft / itemTotalWidth) - bufferSize
+  );
+  const visibleCount =
+    Math.ceil(containerWidth / itemTotalWidth) + bufferSize * 2;
+  const endIndex = Math.min(
+    extendedImages.length - 1,
+    startIndex + visibleCount
+  );
+
+  // Generate visible items for rendering
+  const visibleItems = useMemo(() => {
+    const items = [];
+    for (let i = startIndex; i <= endIndex; i++) {
+      const image = extendedImages[i];
+      if (image) {
+        items.push({
+          index: i,
+          image,
+          left: i * itemTotalWidth,
+        });
+      }
+    }
+    return items;
+  }, [startIndex, endIndex, extendedImages, itemTotalWidth]);
+
+  // Handle infinite scroll logic with virtualization
   const handleScroll = useCallback(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    const scrollLeft = container.scrollLeft;
+    const currentScrollLeft = container.scrollLeft;
+    setScrollLeft(currentScrollLeft);
 
     // Calculate current item index based on scroll position
-    const currentIndex = Math.round(scrollLeft / itemTotalWidth);
+    const currentIndex = Math.round(currentScrollLeft / itemTotalWidth);
 
     // Infinite loop logic: jump to opposite end when reaching cloned items
     if (currentIndex < originalStartIndex) {
-      // Scrolled past left cloned items - jump to end of original items
       const targetScroll =
         (originalEndIndex - (originalStartIndex - currentIndex)) *
         itemTotalWidth;
       container.scrollTo({ left: targetScroll, behavior: "instant" });
     } else if (currentIndex >= originalEndIndex) {
-      // Scrolled past right cloned items - jump to start of original items
       const targetScroll =
         (originalStartIndex + (currentIndex - originalEndIndex)) *
         itemTotalWidth;
@@ -68,30 +104,38 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
     }
   }, [itemTotalWidth, originalStartIndex, originalEndIndex]);
 
-  // Debounced scroll handler to prevent excessive calculations
+  // Debounced scroll handler
   const debouncedScrollHandler = useCallback(() => {
-    // Clear existing timeout
     if (scrollTimeoutRef.current) {
       clearTimeout(scrollTimeoutRef.current);
     }
 
-    // Handle scroll immediately for responsiveness
     handleScroll();
 
-    // Debounce for performance
-    scrollTimeoutRef.current = setTimeout(() => {
-      // Scroll handling is complete
-    }, 150);
+    scrollTimeoutRef.current = setTimeout(() => {}, 150);
   }, [handleScroll]);
 
-  // Initialize scroll position to start of original images
+  // Initialize and handle resize for virtualization
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    // Set initial scroll position to show original images (not clones)
+    const updateDimensions = () => {
+      setContainerWidth(container.clientWidth);
+      setScrollLeft(container.scrollLeft);
+    };
+
     const initialScroll = originalStartIndex * itemTotalWidth;
     container.scrollTo({ left: initialScroll, behavior: "instant" });
+
+    updateDimensions();
+
+    const resizeObserver = new ResizeObserver(updateDimensions);
+    resizeObserver.observe(container);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
   }, [itemTotalWidth, originalStartIndex]);
 
   // Cleanup timeout on unmount
@@ -117,20 +161,30 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
           } as React.CSSProperties
         }
       >
-        {extendedImages.map((image, index) => (
-          <div key={`${image.id}-${index}`} className={styles.imageWrapper}>
-            <Image
-              src={image.url}
-              alt={image.alt}
-              width={itemWidth}
-              height={itemHeight}
-              className={styles.image}
-              loading={index < 10 ? "eager" : "lazy"}
-              priority={index < 3}
-              sizes={`${itemWidth}px`}
-            />
-          </div>
-        ))}
+        <div className={styles.virtualContainer} style={{ width: totalWidth }}>
+          {visibleItems.map(({ index, image, left }) => (
+            <div
+              key={`${image.id}-${index}`}
+              className={styles.imageWrapper}
+              style={{
+                position: "absolute",
+                left: left,
+                width: itemWidth,
+                height: itemHeight,
+              }}
+            >
+              <Image
+                src={image.url}
+                alt={image.alt}
+                width={itemWidth}
+                height={itemHeight}
+                className={styles.image}
+                loading="lazy"
+                sizes={`${itemWidth}px`}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
