@@ -7,7 +7,7 @@ import styles from "./page.module.css";
 
 export default async function Home() {
   const tinyImages = await fetchImages({
-    count: 10,
+    count: 30,
     width: 300,
     height: 200,
   });
