@@ -1,4 +1,4 @@
-/* Infinite Image Carousel Styles */
+/* Infinite Image Carousel - Minimal Essential Styles */
 .carousel {
   width: 100%;
   position: relative;
@@ -10,28 +10,13 @@
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
-  padding: 0 var(--gap);
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
 
-  /* Webkit scrollbar styling */
-  &::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-
-    &:hover {
-      background: rgba(0, 0, 0, 0.5);
-    }
-  }
+/* Hide scrollbar for webkit browsers */
+.container::-webkit-scrollbar {
+  display: none;
 }
 
 .virtualContainer {
@@ -39,56 +24,9 @@
   height: var(--item-height);
 }
 
-.imageWrapper {
-  width: var(--item-width);
-  height: var(--item-height);
-  border-radius: 8px;
-  overflow: hidden;
-  background: #f0f0f0;
-
-  /* Add subtle shadow for depth */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  }
-}
-
 .image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: opacity 0.3s ease;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .container {
-    gap: calc(var(--gap) * 0.75);
-    padding: 0 calc(var(--gap) * 0.75);
-  }
-
-  .imageWrapper {
-    border-radius: 6px;
-
-    &:hover {
-      transform: none;
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    gap: calc(var(--gap) * 0.5);
-    padding: 0 calc(var(--gap) * 0.5);
-  }
-
-  .imageWrapper {
-    border-radius: 4px;
-  }
 }

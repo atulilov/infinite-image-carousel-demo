@@ -19,7 +19,7 @@ interface UsePWAReturn {
   shareApp: () => Promise<void>;
 }
 
-export function usePWA(): UsePWAReturn {
+export const usePWA = (): UsePWAReturn => {
   const [isInstallable, setIsInstallable] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
@@ -116,4 +116,4 @@ export function usePWA(): UsePWAReturn {
     installApp,
     shareApp,
   };
-}
+};

@@ -1,9 +1,11 @@
 "use client";
 
+import type { FC } from "react";
+
 import { usePWA } from "~/hooks/usePWA";
 import styles from "./PWAControls.module.css";
 
-const PWAControls = () => {
+const PWAControls: FC = () => {
   const { isInstallable, isInstalled, isOnline, installApp, shareApp } =
     usePWA();
 

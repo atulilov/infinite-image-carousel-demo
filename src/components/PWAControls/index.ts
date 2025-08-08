@@ -1,3 +1,1 @@
-import PWAControls from "./PWAControls";
-
-export default PWAControls;
+export { default } from "./PWAControls";

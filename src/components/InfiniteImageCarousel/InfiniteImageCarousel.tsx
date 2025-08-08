@@ -1,31 +1,21 @@
 "use client";
 
-import React, {
+import {
   useRef,
   useCallback,
   useEffect,
   useState,
   useMemo,
+  type FC,
+  type CSSProperties,
 } from "react";
 import Image from "next/image";
+
 import styles from "./InfiniteImageCarousel.module.css";
 
-interface CarouselImage {
-  id: string;
-  url: string;
-  alt: string;
-  width?: number;
-  height?: number;
-}
+import type { InfiniteImageCarouselProps } from "./InfiniteImageCarousel.types";
 
-interface InfiniteImageCarouselProps {
-  images: CarouselImage[];
-  itemWidth: number;
-  itemHeight: number;
-  gap?: number;
-}
-
-const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
+const InfiniteImageCarousel: FC<InfiniteImageCarouselProps> = ({
   images,
   itemWidth,
   itemHeight,
@@ -135,19 +125,19 @@ const InfiniteImageCarousel: React.FC<InfiniteImageCarouselProps> = ({
     };
   }, [itemTotalWidth, originalStartIndex]);
 
+  const containerStyle: CSSProperties & Record<string, string> = {
+    "--item-width": `${itemWidth}px`,
+    "--item-height": `${itemHeight}px`,
+    "--gap": `${gap}px`,
+  };
+
   return (
     <div className={styles.carousel}>
       <div
         ref={containerRef}
         className={styles.container}
         onScroll={immediateScrollHandler}
-        style={
-          {
-            "--item-width": `${itemWidth}px`,
-            "--item-height": `${itemHeight}px`,
-            "--gap": `${gap}px`,
-          } as React.CSSProperties
-        }
+        style={containerStyle}
       >
         <div className={styles.virtualContainer} style={{ width: totalWidth }}>
           {visibleItems.map(({ index, image, left }) => (

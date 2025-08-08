@@ -1,10 +1,4 @@
-interface CarouselImage {
-  id: string;
-  url: string;
-  alt: string;
-  width?: number;
-  height?: number;
-}
+import { type CarouselImage } from "~/components/InfiniteImageCarousel";
 
 interface PicsumImage {
   id: string;
